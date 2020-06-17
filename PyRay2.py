@@ -55,7 +55,7 @@ def main():
     WIDTH = 1000
     HEIGHT = 800
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("PyRay - Python Raycasting Engine (v0.03)")
+    pygame.display.set_caption("PyRay2 - Python Raycasting Engine (v0.01)")
 
     showShadow = True
     showHUD = True    
