@@ -6,11 +6,19 @@ PyRay2 is a ray casting engine (http://en.wikipedia.org/wiki/Ray_casting ) writt
 ## Controls:
 
 ESC – Exit program
+
 F1 – Take screen shot jpg
+
 F2 – Take screen shot bmp
+
 F5 – Turn on shadows
+
 F6 – Turn of shadows
+
 F7 – Show HUD
+
 F8 – Remove HUD
+
 SHIFT – Sprint/Run
+
 Use arrow keys to move around.
