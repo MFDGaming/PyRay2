@@ -3,20 +3,32 @@ This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
-
-Authors: MFDGaming, oscr
+Authors: MFDGaming
 Repo: http://github.com/MFDGaming/PyRay2
 """ 
 
-
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide' # Hide pygame support message
+import pygame
 import math
 import time
+import zipfile
 import pygame
 from pygame.locals import *
 
-keys = [False] * 324
+# Game info
+gameName = 'PyRay2 - A python raycasting engine - '
+gameVersion = 'v1.0'
 
-# A map over the world
+pygame.init() # Initialize pygame
+
+# Pygame screen
+screenWidth = 1000
+screenHeight = 800
+screen = pygame.display.set_mode((screenWidth, screenHeight))
+pygame.display.set_caption(gameName + gameVersion)
+
+# Map Data
 worldMap =  [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -49,221 +61,161 @@ worldMap =  [
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
             ]
+           
+px = 13.0 # Player x starting position
+py = 13.0 # Player y starting position
+pdx = 1.0 # Player x directional vector
+pdy = 0.0 # Player y directional vector
+cpx = 0.0 # The x 2d raycast version of camera plain
+cpy = 0.5 # The y 2d raycast version of camera plain
+pa = math.atan2((math.sqrt(1.0 + (py * py) / (px * px))), (math.sqrt(1.0 + (px * px) / (py * py)))) * (180 / math.pi)
+rotSpeed = 0.05
+moveSpeed = 0.1
 
-# Closes the program 
-def close(): 
-    pygame.display.quit()
-    pygame.quit()
+# Trigeometric tuples + variables for index
+TGM = (math.cos(rotSpeed), math.sin(rotSpeed))
+ITGM = (math.cos(-rotSpeed), math.sin(-rotSpeed))
+COS, SIN = (0,1)
 
-def main():
-    pygame.init()
+running = True # Is the game running?
 
-    # Head Up Display information (HUD)
-    font = pygame.font.SysFont("Verdana",20)
-    HUD = font.render("F1 / F2 - Screenshot JPEG/BMP   F5/F6 - Shadows on/off   F7/F8 - HUD Show/Hide", True, (0,0,0))
-
-    # Creates window 
-    WIDTH = 1000
-    HEIGHT = 800
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("PyRay2 - Python Raycasting Engine (v0.01)")
-
-    showShadow = True
-    showHUD = True    
-    
-    # Defines starting position and direction
-    positionX = 13.0
-    positionY = 13.0
-
-    directionX = 1.0
-    directionY = 0.0
-
-    planeX = 0.0
-    planeY = 0.5
-
-    # Movement constants 
-    DEFAULTROTATIONSPEED = 0.02
-    DEFAULTMOVESPEED = 0.05   
-    ROTATIONSPEED = 0.02
-    MOVESPEED = 0.05
-
-    # Trigeometric tuples + variables for index
-    TGM = (math.cos(ROTATIONSPEED), math.sin(ROTATIONSPEED))
-    ITGM = (math.cos(-ROTATIONSPEED), math.sin(-ROTATIONSPEED))
-    COS, SIN = (0,1)
-    
-    while True:
-        # Catches user input
-        # Sets keys[key] to True or False
-        for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    close()
-                    return
-                keys[event.key] = True
-            elif event.type == KEYUP:
-                keys[event.key] = False
-
-        # Checks with keys are pressed by the user
-        # Uses if so that more than one button at a time can be pressed.  
-        if keys[K_ESCAPE]:
-            close()
-
-        if keys[K_LEFT]:
-            oldDirectionX = directionX
-            directionX = directionX * ITGM[COS] - directionY * ITGM[SIN]
-            directionY = oldDirectionX * ITGM[SIN] + directionY * ITGM[COS]
-            oldPlaneX = planeX
-            planeX = planeX * ITGM[COS] - planeY * ITGM[SIN]
-            planeY = oldPlaneX * ITGM[SIN] + planeY * ITGM[COS]
-
-        if keys[K_RIGHT]:
-            oldDirectionX = directionX
-            directionX = directionX * TGM[COS] - directionY * TGM[SIN]
-            directionY = oldDirectionX * TGM[SIN] + directionY * TGM[COS]
-            oldPlaneX = planeX
-            planeX = planeX * TGM[COS] - planeY * TGM[SIN]
-            planeY = oldPlaneX * TGM[SIN] + planeY * TGM[COS]    
-
-        if keys[K_UP]:
-            if not worldMap[int(positionX + directionX * MOVESPEED)][int(positionY)]:
-                positionX += directionX * MOVESPEED
-            if not worldMap[int(positionX)][int(positionY + directionY * MOVESPEED)]:
-                positionY += directionY * MOVESPEED
-                
-        if keys[K_DOWN]:
-            if not worldMap[int(positionX - directionX * MOVESPEED)][int(positionY)]:
-                positionX -= directionX * MOVESPEED
-            if not worldMap[int(positionX)][int(positionY - directionY * MOVESPEED)]:
-                positionY -= directionY * MOVESPEED
-                
-        if keys[K_LSHIFT] or keys[K_RSHIFT]:
-            ROTATIONSPEED = 0.05
-            MOVESPEED = 0.1
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        
+    # Draws roof and floor
+    screen.fill((25,25,25))
+    pygame.draw.rect(screen, (50,50,50), (0, int(screenHeight/2), screenWidth, int(screenHeight/2))) 
+        
+    column = 0
+    while column < screenWidth:
+        column += 1
+        # Calculate ray position and direction
+        cx = 2.0 * column / screenWidth - 1.0
+        rpx = px
+        rpy = py
+        rdx = pdx + cpx * cx
+        rdy = pdy + cpy * cx + .000000000000001 # avoiding ZDE
+        
+        # Which box of the map the player is in
+        mapX = int(rpx)
+        mapY = int(rpy)
+        
+        # Length of the ray from current position to next x or y-side
+        sideDistX = None
+        sideDistY = None
+        
+        # Length of the ray from 1 x or y-side to next x or y-side
+        deltaDistX = math.sqrt(1.0 + (rdy * rdy) / (rdx * rdx))
+        deltaDistY = math.sqrt(1.0 + (rdx * rdx) / (rdy * rdy))
+        perpWallDist = None
+        
+        # What direction to step in x or y-direction (either +1 or -1)
+        stepX = None
+        stepY = None
+        
+        hit = 0 # Was there a wall hit?  
+        side = None # Was a NS or a EW wall hit?
+        
+        # Calculate step and initial sideDist
+        if rdx < 0:
+            stepX = -1
+            sideDistX = (rpx - mapX) * deltaDistX
         else:
-            ROTATIONSPEED = DEFAULTROTATIONSPEED
-            MOVESPEED = DEFAULTMOVESPEED
-
-        if keys[K_F1]:
-            try:
-                pygame.image.save(screen,('PyRay' + time.strftime('%Y%m%d%H%M%S')+ '.jpeg'))
-            except:
-                print("Couldn't save jpeg screenshot")
-                
-        if keys[K_F2]:
-            try:
-                pygame.image.save(screen,('PyRay' + time.strftime('%Y%m%d%H%M%S')+ '.bmp'))
-            except:
-                print("Couldn't save bmp screenshot")
-
-        # showShadows - On / Off
-        if keys[K_F5]:
-            showShadow = True
-        if keys[K_F6]:
-            showShadow = False
-
-        # showHUD - Show / Hide
-        if keys[K_F7]:
-            showHUD = True
-        if keys[K_F8]:
-            showHUD = False
+            stepX = 1
+            sideDistX = (mapX + 1.0 - rpx) * deltaDistX
             
-        # Draws roof and floor
-        screen.fill((25,25,25))
-        pygame.draw.rect(screen, (50,50,50), (0, HEIGHT/2, WIDTH, HEIGHT/2)) 
+        if rdy < 0:
+            stepY = -1
+            sideDistY = (rpy - mapY) * deltaDistY
+        else:
+            stepY = 1
+            sideDistY = (mapY + 1.0 - rpy) * deltaDistY
+
+        # Perform DDA
+        while (hit == 0):
+            # Jump to next sqare, or in x-direction, or in y-direction
+            if sideDistX < sideDistY:
+                sideDistX += deltaDistX
+                mapX += stepX
+                side = 0
+            else:
+                sideDistY += deltaDistY
+                mapY += stepY
+                side = 1
+            # Check if ray has hit a wall
+            if worldMap[mapX][mapY] > 0:
+                hit = 1
                 
-        # Starts drawing level from 0 to < WIDTH 
-        column = 0        
-        while column < WIDTH:
-            cameraX = 2.0 * column / WIDTH - 1.0
-            rayPositionX = positionX
-            rayPositionY = positionY
-            rayDirectionX = directionX + planeX * cameraX
-            rayDirectionY = directionY + planeY * cameraX + .000000000000001 # avoiding ZDE 
+        # Calculate distance projected on Camera direction (Euclidean distance will give fishey effect!)
+        if side == 0:
+            prepWallDist = abs((mapX - rpx + (1.0 - stepX) / 2.0) / rdx)
+        else:
+            prepWallDist = abs((mapY - rpy + (1.0 - stepY) / 2.0) / rdy)
+            
+        # Calculate height of the line to draw on the screen
+        lineHeight = abs(int(screenHeight / (prepWallDist + .0000001)))
+        
+        # Calculate lowest and highest pixel to fill in currentstripe
+        drawStart = -lineHeight / 2.0 + screenHeight / 2.0
+        if drawStart < 0:
+            drawStart = 0
+        drawEnd = lineHeight / 2.0 + screenHeight / 2.0
+        if drawEnd >= screenHeight:
+            drawEnd = screenHeight - 1
 
-            # In what square is the ray?
-            mapX = int(rayPositionX)
-            mapY = int(rayPositionY)
+        # Wall colors 0 to 3
+        wallcolors = [ [], [150,0,0], [0,150,0], [0,0,150] ]
+        color = wallcolors[ worldMap[mapX][mapY] ]  
 
-            # Delta distance calculation
-            # Delta = square ( raydir * raydir) / (raydir * raydir)
-            deltaDistanceX = math.sqrt(1.0 + (rayDirectionY * rayDirectionY) / (rayDirectionX * rayDirectionX))
-            deltaDistanceY = math.sqrt(1.0 + (rayDirectionX * rayDirectionX) / (rayDirectionY * rayDirectionY))
+        # Draws Shadow
+        if side == 1:
+            for i,v in enumerate(color):
+                color[i] = int(v / 1.2)                    
 
-            # We need sideDistanceX and Y for distance calculation. Checks quadrant
-            if (rayDirectionX < 0):
-                stepX = -1
-                sideDistanceX = (rayPositionX - mapX) * deltaDistanceX
+        # Drawing the graphics                        
+        pygame.draw.line(screen, color, (int(column), int(drawStart)), (int(column), int(drawEnd)), 2)
 
-            else:
-                stepX = 1
-                sideDistanceX = (mapX + 1.0 - rayPositionX) * deltaDistanceX
+    # Player controls
+    if pygame.key.get_pressed()[pygame.K_LEFT]:
+        opdx = pdx
+        pdx = pdx * ITGM[COS] - pdy * ITGM[SIN]
+        pdy = opdx * ITGM[SIN] + pdy * ITGM[COS]
+        ocpx = cpx
+        cpx = cpx * ITGM[COS] - cpy * ITGM[SIN]
+        cpy = ocpx * ITGM[SIN] + cpy * ITGM[COS]
 
-            if (rayDirectionY < 0):
-                stepY = -1
-                sideDistanceY = (rayPositionY - mapY) * deltaDistanceY
+    if pygame.key.get_pressed()[pygame.K_RIGHT]:
+        opdx = pdx
+        pdx = pdx * TGM[COS] - pdy * TGM[SIN]
+        pdy = opdx * TGM[SIN] + pdy * TGM[COS]
+        ocpx = cpx
+        cpx = cpx * TGM[COS] - cpy * TGM[SIN]
+        cpy = ocpx * TGM[SIN] + cpy * TGM[COS]
 
-            else:
-                stepY = 1
-                sideDistanceY = (mapY + 1.0 - rayPositionY) * deltaDistanceY
+    if pygame.key.get_pressed()[pygame.K_DOWN]:
+        if not worldMap[int(px - pdx * moveSpeed)][int(py)]:
+            px -= pdx * moveSpeed
+        if not worldMap[int(px)][int(py - pdy * moveSpeed)]:
+            py -= pdy * moveSpeed
 
-            # Finding distance to a wall
-            hit = 0
-            while  (hit == 0):
-                if (sideDistanceX < sideDistanceY):
-                    sideDistanceX += deltaDistanceX
-                    mapX += stepX
-                    side = 0
-                    
-                else:
-                    sideDistanceY += deltaDistanceY
-                    mapY += stepY
-                    side = 1
-                    
-                if (worldMap[mapX][mapY] > 0):
-                    hit = 1
+    if pygame.key.get_pressed()[pygame.K_UP]:
+        if not worldMap[int(px + pdx * moveSpeed)][int(py)]:
+            px += pdx * moveSpeed
+        if not worldMap[int(px)][int(py + pdy * moveSpeed)]:
+            py += pdy * moveSpeed
 
-            # Correction against fish eye effect
-            if (side == 0):
-                perpWallDistance = abs((mapX - rayPositionX + ( 1.0 - stepX ) / 2.0) / rayDirectionX)
-            else:
-                perpWallDistance = abs((mapY - rayPositionY + ( 1.0 - stepY ) / 2.0) / rayDirectionY)
+    if pygame.key.get_pressed()[K_LSHIFT]:
+        rotSpeed = 0.1
+        moveSpeed = 0.15
+    elif pygame.key.get_pressed()[K_RSHIFT]:
+        rotSpeed = 0.1
+        moveSpeed = 0.15
+    else:
+        rotSpeed = 0.05
+        moveSpeed = 0.1
 
-            # Calculating HEIGHT of the line to draw
-            lineHEIGHT = abs(int(HEIGHT / (perpWallDistance+.0000001)))
-            drawStart = -lineHEIGHT / 2.0 + HEIGHT / 2.0
-
-            # if drawStat < 0 it would draw outside the screen
-            if (drawStart < 0):
-                drawStart = 0
-
-            drawEnd = lineHEIGHT / 2.0 + HEIGHT / 2.0
-
-            if (drawEnd >= HEIGHT):
-                drawEnd = HEIGHT - 1
-
-            # Wall colors 0 to 3
-            wallcolors = [ [], [150,0,0], [0,150,0], [0,0,150] ]
-            color = wallcolors[ worldMap[mapX][mapY] ]                                  
-
-            # If side == 1 then ton the color down. Gives a "showShadow" an the wall.
-            # Draws showShadow if showShadow is True
-            if showShadow:
-                if side == 1:
-                    for i,v in enumerate(color):
-                        color[i] = int(v / 1.2)                    
-
-            # Drawing the graphics                           
-            pygame.draw.line(screen, color, (column,drawStart), (column, drawEnd), 2)
-            column += 2
-
-        # Drawing HUD if showHUD is True
-        if showHUD:
-            pygame.draw.rect(screen, (100,100,200), (0, HEIGHT-40, WIDTH, 40))
-            screen.blit(HUD, (20,HEIGHT-30))
-
-        # Updating display
-        pygame.event.pump()
-        pygame.display.flip()           
-       
-main()
+    # Updating display
+    pygame.event.pump()
+    pygame.display.flip()
