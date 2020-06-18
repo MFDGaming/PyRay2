@@ -5,6 +5,8 @@ PyRay2 is a ray casting engine (http://en.wikipedia.org/wiki/Ray_casting ) writt
 
 ## Author: MFDGaming
 
+## Used assets: gb.mp3 by 3DRealms
+
 ## Controls:
 
 SHIFT – Sprint/Run
