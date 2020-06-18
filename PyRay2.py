@@ -77,12 +77,18 @@ TGM = (math.cos(rotSpeed), math.sin(rotSpeed))
 ITGM = (math.cos(-rotSpeed), math.sin(-rotSpeed))
 COS, SIN = (0,1)
 
+pygame.mixer.init()
+pygame.mixer.music.load("./gb.mp3") 
+
 running = True # Is the game running?
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            
+    if pygame.mixer.music.get_busy() == False:
+        pygame.mixer.music.play()
         
     # Draws roof and floor
     screen.fill((25,25,25))
