@@ -78,6 +78,7 @@ ITGM = (math.cos(-rotSpeed), math.sin(-rotSpeed))
 COS, SIN = (0,1)
 
 running = True # Is the game running?
+clock = pygame.time.Clock()
 
 while running:
     for event in pygame.event.get():
@@ -219,3 +220,4 @@ while running:
     # Updating display
     pygame.event.pump()
     pygame.display.flip()
+    clock.tick(60)
