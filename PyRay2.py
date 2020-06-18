@@ -81,6 +81,7 @@ pygame.mixer.init()
 pygame.mixer.music.load("./gb.mp3") 
 
 running = True # Is the game running?
+clock = pygame.time.Clock()
 
 while running:
     for event in pygame.event.get():
@@ -225,3 +226,4 @@ while running:
     # Updating display
     pygame.event.pump()
     pygame.display.flip()
+    clock.tick(60)
