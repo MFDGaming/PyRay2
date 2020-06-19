@@ -31,8 +31,6 @@ isFullScreen = True
 
 # Texture vars
 textureMode = False
-textureWidth = 256
-textureHeight = 256
 
 # Map Data
 worldMap =  [
@@ -77,6 +75,23 @@ cpy = 0.5 # The y 2d raycast version of camera plain
 rotSpeed = 0.05
 moveSpeed = 0.1
 
+def loadTexture(texture):
+    texture = pygame.image.load('./' + str(texture)).convert()
+    return texture
+
+texture = [ [], [], loadTexture("floor1.jpg"), loadTexture("sky.png"), loadTexture("wall1.jpg") ]
+
+def getTextureWidth(num):
+    textureWidth = texture[num]
+    textureWidth = textureWidth.get_size()
+    textureWidth = textureWidth[0]
+    return textureWidth
+    
+def getTextureHeight(num):
+    textureHeight = texture[num]
+    textureHeight = textureHeight.get_size()
+    textureHeight = textureHeight[1]
+    return textureHeight
 
 # Trigeometric tuples + variables for index
 TGM = (math.cos(rotSpeed), math.sin(rotSpeed))
@@ -97,9 +112,14 @@ while running:
     if pygame.mixer.music.get_busy() == False:
         pygame.mixer.music.play()
         
-    # Draws roof and floor
-    screen.fill((25,25,25))
-    pygame.draw.rect(screen, (50,50,50), (0, int(screenHeight/2), screenWidth, int(screenHeight/2))) 
+    if textureMode == False:
+        # Draws roof and floor
+        screen.fill((25,25,25))
+        pygame.draw.rect(screen, (50,50,50), (0, int(screenHeight/2), screenWidth, int(screenHeight/2)))
+    else:
+        # Draws roof and floor
+        screen.blit(pygame.transform.scale(texture[3], (screenWidth, screenHeight)), (0, 0))
+        pygame.draw.rect(screen, (50,50,50), (0, int(screenHeight/2), screenWidth, int(screenHeight/2)))
         
     column = 0
     while column < screenWidth:
