@@ -30,7 +30,7 @@ pygame.display.set_caption(gameName + gameVersion)
 isFullScreen = True
 
 # Texture vars
-textureMode = False
+textureMode = True
 
 # Map Data
 worldMap =  [
@@ -211,6 +211,7 @@ while running:
             # Drawing the graphics                        
             pygame.draw.line(screen, color, (int(column), int(drawStart)), (int(column), int(drawEnd)), 2)
         else:
+            textureNumber = worldMap[mapX][mapY]
             #calculate value of wallX
             wallX = None
             if side == 0:
@@ -220,22 +221,33 @@ while running:
             wallX -= math.floor((wallX))
             
             # X coordinate on the texture
-            textureX = int(wallX * float(getTextureWidth(worldMap[mapX][mapY])))
+            textureX = int(wallX * float(getTextureWidth(textureNumber)))
             if side == 0 and rdx > 0:
-                textureX = getTextureWidth(worldMap[mapX][mapY]) - textureX - 1
+                textureX = getTextureWidth(textureNumber) - textureX - 1
             if side == 1 and rdy < 0:
-                textureX = getTextureWidth(worldMap[mapX][mapY]) - textureX - 1
+                textureX = getTextureWidth(textureNumber) - textureX - 1
                 
             # How much increase the texture coordinmate per screen pixel
             step = 1.0 * getTextureHeight(worldMap[mapX][mapY]) / lineHeight
             # Starting texture coordinate
             texturePos = (drawStart - screenHeight / 2 + lineHeight / 2) * step
+                
+            textureY = int(texturePos) & (getTextureHeight(worldMap[mapX][mapY]) - 1)
+            texturePos += step
             
-            y = drawStart
-            while y < drawEnd:
-                y += 1
-                textureY = int(texturePos) & (getTextureHeight(worldMap[mapX][mapY]) - 1)
-                texturePos += step
+            c = max(1, (255.0 - prepWallDist * 27.2) * (1 - side * .25))
+            yStart = max(0, drawStart)
+            yStop = min(screenHeight, drawEnd)
+            pixelsPerTexel = lineHeight / getTextureHeight(textureNumber)
+            colStart = int((yStart - drawStart) / pixelsPerTexel + .5)
+            colHeight = int((yStop - yStart) / pixelsPerTexel + .5)
+            yStart = int(colStart * pixelsPerTexel + drawStart + .5)
+            yHeight = int(colHeight * pixelsPerTexel + .5)
+            column2 = texture[textureNumber].subsurface((textureX, colStart, 1, colHeight))
+            column2 = column2.copy()
+            column2.fill((c, c, c), special_flags = BLEND_MULT)
+            column2 = pygame.transform.scale(column2, (1, yHeight))
+            screen.blit(column2, (column, yStart))
 
     # Player controls
     if pygame.key.get_pressed()[pygame.K_LEFT]:
