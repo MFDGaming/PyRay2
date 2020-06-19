@@ -245,6 +245,8 @@ while running:
             yHeight = int(colHeight * pixelsPerTexel + .5)
             column2 = texture[textureNumber].subsurface((textureX, colStart, 1, colHeight))
             column2 = column2.copy()
+            if side == 1:
+                c = (int(c) >> 1) & 8355711
             column2.fill((c, c, c), special_flags = BLEND_MULT)
             column2 = pygame.transform.scale(column2, (1, yHeight))
             screen.blit(column2, (column, yStart))
