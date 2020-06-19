@@ -23,10 +23,11 @@ gameVersion = 'v1.0'
 pygame.init() # Initialize pygame
 
 # Pygame screen
-screenWidth = 1000
-screenHeight = 800
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+screenWidth = 1280
+screenHeight = 960
+screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.FULLSCREEN)
 pygame.display.set_caption(gameName + gameVersion)
+isFullScreen = True
 
 # Texture vars
 textureMode = False
@@ -254,6 +255,17 @@ while running:
     else:
         rotSpeed = 0.05
         moveSpeed = 0.1
+            
+    if pygame.key.get_pressed()[K_ESCAPE]:
+        running = False
+        
+    if pygame.key.get_pressed()[K_F11]:
+        if isFullScreen == False:
+            screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.FULLSCREEN)
+            isFullScreen = True
+        else:
+            screen = pygame.display.set_mode((screenWidth, screenHeight))
+            isFullScreen = False
 
     # Updating display
     pygame.event.pump()
