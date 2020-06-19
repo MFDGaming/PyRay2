@@ -220,21 +220,21 @@ while running:
             wallX -= math.floor((wallX))
             
             # X coordinate on the texture
-            textureX = int(wallX * float(textureWidth))
+            textureX = int(wallX * float(getTextureWidth(worldMap[mapX][mapY])))
             if side == 0 and rdx > 0:
-                textureX = textureWidth - textureX - 1
+                textureX = getTextureWidth(worldMap[mapX][mapY]) - textureX - 1
             if side == 1 and rdy < 0:
-                textureX = textureWidth - textureX - 1
+                textureX = getTextureWidth(worldMap[mapX][mapY]) - textureX - 1
                 
             # How much increase the texture coordinmate per screen pixel
-            step = 1.0 * textureHeight / lineHeight
+            step = 1.0 * getTextureHeight(worldMap[mapX][mapY]) / lineHeight
             # Starting texture coordinate
             texturePos = (drawStart - screenHeight / 2 + lineHeight / 2) * step
             
             y = drawStart
             while y < drawEnd:
                 y += 1
-                textureY = int(texturePos) & (textureHeight - 1)
+                textureY = int(texturePos) & (getTextureHeight(worldMap[mapX][mapY]) - 1)
                 texturePos += step
 
     # Player controls
