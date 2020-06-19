@@ -28,6 +28,11 @@ screenHeight = 800
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption(gameName + gameVersion)
 
+# Texture vars
+textureMode = False
+textureWidth = 256
+textureHeight = 256
+
 # Map Data
 worldMap =  [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -68,9 +73,9 @@ pdx = 1.0 # Player x directional vector
 pdy = 0.0 # Player y directional vector
 cpx = 0.0 # The x 2d raycast version of camera plain
 cpy = 0.5 # The y 2d raycast version of camera plain
-pa = math.atan2((math.sqrt(1.0 + (py * py) / (px * px))), (math.sqrt(1.0 + (px * px) / (py * py)))) * (180 / math.pi)
 rotSpeed = 0.05
 moveSpeed = 0.1
+
 
 # Trigeometric tuples + variables for index
 TGM = (math.cos(rotSpeed), math.sin(rotSpeed))
@@ -171,18 +176,45 @@ while running:
         drawEnd = lineHeight / 2.0 + screenHeight / 2.0
         if drawEnd >= screenHeight:
             drawEnd = screenHeight - 1
+            
+        if textureMode == False:
+            # Wall colors 0 to 3
+            wallcolors = [ [], [150,0,0], [0,150,0], [0,0,150] ]
+            color = wallcolors[ worldMap[mapX][mapY] ]  
 
-        # Wall colors 0 to 3
-        wallcolors = [ [], [150,0,0], [0,150,0], [0,0,150] ]
-        color = wallcolors[ worldMap[mapX][mapY] ]  
+            # Draws Shadow
+            if side == 1:
+                for i,v in enumerate(color):
+                    color[i] = int(v / 1.2)                    
 
-        # Draws Shadow
-        if side == 1:
-            for i,v in enumerate(color):
-                color[i] = int(v / 1.2)                    
-
-        # Drawing the graphics                        
-        pygame.draw.line(screen, color, (int(column), int(drawStart)), (int(column), int(drawEnd)), 2)
+            # Drawing the graphics                        
+            pygame.draw.line(screen, color, (int(column), int(drawStart)), (int(column), int(drawEnd)), 2)
+        else:
+            #calculate value of wallX
+            wallX = None
+            if side == 0:
+                wallX = py + prepWallDist * rdy
+            else:
+                wallX = px + prepWallDist * rdx
+            wallX -= math.floor((wallX))
+            
+            # X coordinate on the texture
+            textureX = int(wallX * float(textureWidth))
+            if side == 0 and rdx > 0:
+                textureX = textureWidth - textureX - 1
+            if side == 1 and rdy < 0:
+                textureX = textureWidth - textureX - 1
+                
+            # How much increase the texture coordinmate per screen pixel
+            step = 1.0 * textureHeight / lineHeight
+            # Starting texture coordinate
+            texturePos = (drawStart - screenHeight / 2 + lineHeight / 2) * step
+            
+            y = drawStart
+            while y < drawEnd:
+                y += 1
+                textureY = int(texturePos) & (textureHeight - 1)
+                texturePos += step
 
     # Player controls
     if pygame.key.get_pressed()[pygame.K_LEFT]:
