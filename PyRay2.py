@@ -79,7 +79,7 @@ def loadTexture(texture):
     texture = pygame.image.load('./' + str(texture)).convert()
     return texture
 
-texture = [ [], [], loadTexture("floor1.jpg"), loadTexture("sky.png"), loadTexture("wall1.jpg") ]
+texture = [ (), loadTexture("wall1.jpg"), loadTexture("floor1.jpg"), loadTexture("sky.png") ]
 
 def getTextureWidth(num):
     textureWidth = texture[num]
