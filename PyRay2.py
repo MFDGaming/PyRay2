@@ -282,6 +282,18 @@ while running:
             px += pdx * moveSpeed
         if not worldMap[int(px)][int(py + pdy * moveSpeed)]:
             py += pdy * moveSpeed
+            
+    if pygame.key.get_pressed()[pygame.K_COMMA]:
+        if not worldMap[int(px - cpx * moveSpeed)][int(py)]:
+            px -= cpx * moveSpeed
+        if not worldMap[int(px)][int(py - cpy * moveSpeed)]:
+            py -= cpy * moveSpeed
+
+    if pygame.key.get_pressed()[pygame.K_PERIOD]:
+        if not worldMap[int(px + cpx * moveSpeed)][int(py)]:
+            px += cpx * moveSpeed
+        if not worldMap[int(px)][int(py + cpy * moveSpeed)]:
+            py += cpy * moveSpeed
 
     if pygame.key.get_pressed()[K_LSHIFT]:
         rotSpeed = 0.1
