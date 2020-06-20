@@ -93,6 +93,9 @@ def getTextureHeight(num):
     textureHeight = textureHeight[1]
     return textureHeight
 
+def getTextureArray(num):
+    return pygame.PixelArray(texture[num])
+
 # Trigeometric tuples + variables for index
 TGM = (math.cos(rotSpeed), math.sin(rotSpeed))
 ITGM = (math.cos(-rotSpeed), math.sin(-rotSpeed))
