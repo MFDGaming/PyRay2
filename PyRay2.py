@@ -251,7 +251,7 @@ while running:
             if side == 1:
                 c = (int(c) >> 1) & 8355711
             column2.fill((c, c, c), special_flags = BLEND_MULT)
-            column2 = pygame.transform.scale(column2, (1, yHeight))
+            column2 = pygame.transform.scale(column2, (2, yHeight))
             screen.blit(column2, (column, yStart))
 
     # Player controls
