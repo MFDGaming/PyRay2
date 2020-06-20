@@ -231,11 +231,11 @@ while running:
                 textureX = getTextureWidth(textureNumber) - textureX - 1
                 
             # How much increase the texture coordinmate per screen pixel
-            step = 1.0 * getTextureHeight(worldMap[mapX][mapY]) / lineHeight
+            step = 1.0 * getTextureHeight(textureNumber) / lineHeight
             # Starting texture coordinate
             texturePos = (drawStart - screenHeight / 2 + lineHeight / 2) * step
                 
-            textureY = int(texturePos) & (getTextureHeight(worldMap[mapX][mapY]) - 1)
+            textureY = int(texturePos) & (getTextureHeight(textureNumber) - 1)
             texturePos += step
             
             c = max(1, (255.0 - prepWallDist * 27.2) * (1 - side * .25))
