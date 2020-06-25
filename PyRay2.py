@@ -112,8 +112,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             
-    if pygame.mixer.music.get_busy() == False:
-        pygame.mixer.music.play()
+    #if pygame.mixer.music.get_busy() == False:
+        #pygame.mixer.music.play()
         
     if textureMode == False:
         # Draws roof and floor
