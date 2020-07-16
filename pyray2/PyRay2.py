@@ -12,6 +12,8 @@
 * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 """
 
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide' # Hide pygame support message
 import pygame
 import tkinter
 import tkinter.messagebox
@@ -37,7 +39,7 @@ class PyRay2(Thread):
 
         # Game info
         gameName = 'PyRay2 - A python raycasting engine - '
-        gameVersion = 'v1.0'
+        gameVersion = 'v2.0'
         
         # Check for options config
         if Options.checkForOptionsFile():
