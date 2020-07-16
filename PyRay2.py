@@ -295,20 +295,20 @@ while running:
         if not worldMap[int(px)][int(py + cpy * moveSpeed)]:
             py += cpy * moveSpeed
 
-    if pygame.key.get_pressed()[K_LSHIFT]:
+    if pygame.key.get_pressed()[pygame.K_LSHIFT]:
         rotSpeed = 0.1
         moveSpeed = 0.15
-    elif pygame.key.get_pressed()[K_RSHIFT]:
+    elif pygame.key.get_pressed()[pygame.K_RSHIFT]:
         rotSpeed = 0.1
         moveSpeed = 0.15
     else:
         rotSpeed = 0.05
         moveSpeed = 0.1
             
-    if pygame.key.get_pressed()[K_ESCAPE]:
+    if pygame.key.get_pressed()[pygame.K_ESCAPE]:
         running = False
         
-    if pygame.key.get_pressed()[K_F11]:
+    if pygame.key.get_pressed()[pygame.K_F11]:
         if isFullScreen == False:
             screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.FULLSCREEN)
             isFullScreen = True
