@@ -2,8 +2,8 @@
 TITLE PyRay2
 cd /d %~dp0
 
-if exist pyray\PyRay2.py (
-	set PYRAY_FILE=pyray\PyRay2.py
+if exist pyray2\PyRay2.py (
+	set PYRAY_FILE=pyray2\PyRay2.py
 )
 
 
