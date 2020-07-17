@@ -36,3 +36,6 @@ class TextureManager:
 
     def getTextureHeight(texture, num):
         return texture[num].get_size()[1]
+    
+    def getTexturePixelArray(num):
+        return pygame.PixelArray(TextureManager.getTextures()[num])
