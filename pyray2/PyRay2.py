@@ -147,8 +147,8 @@ class PyRay2(Thread):
                 sideDistY = None
         
                 # Length of the ray from 1 x or y-side to next x or y-side
-                deltaDistX = math.sqrt(1.0 + (rdy * rdy) / (rdx * rdx))
-                deltaDistY = math.sqrt(1.0 + (rdx * rdx) / (rdy * rdy))
+                deltaDistX = abs(1.0 / rdx)
+                deltaDistY = abs(1.0 / rdy)
                 perpWallDist = None
         
                 # What direction to step in x or y-direction (either +1 or -1)
