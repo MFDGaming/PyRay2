@@ -128,11 +128,11 @@ class PyRay2(Thread):
                 screen.blit(pygame.transform.scale(textureMap[2], (screenWidth, screenHeight)), (0, 0))
                 pygame.draw.rect(screen, (50,50,50), (0, int(screenHeight/2), screenWidth, int(screenHeight/2)))
 
-            column = 0
-            while column < screenWidth:
-                column += 1
+            x = 0
+            while x < screenWidth:
+                x += 1
                 # Calculate ray position and direction
-                cx = 2.0 * column / screenWidth - 1.0
+                cx = 2.0 * x / screenWidth - 1.0
                 rpx = px
                 rpy = py
                 rdx = pdx + cpx * cx
@@ -216,7 +216,7 @@ class PyRay2(Thread):
                             color[i] = int(v / 1.2)                    
 
                     # Drawing the graphics                        
-                    pygame.draw.line(screen, color, (int(column), int(drawStart)), (int(column), int(drawEnd)), 2)
+                    pygame.draw.line(screen, color, (int(x), int(drawStart)), (int(x), int(drawEnd)), 2)
                 else:
                     textureNumber = worldMap[mapX][mapY]
                     textureWidth = TextureManager.getTextureWidth(textureMap, textureNumber)
@@ -252,13 +252,13 @@ class PyRay2(Thread):
                     colHeight = int((yStop - yStart) / pixelsPerTexel + .5)
                     yStart = int(colStart * pixelsPerTexel + drawStart + .5)
                     yHeight = int(colHeight * pixelsPerTexel + .5)
-                    column2 = textureMap[textureNumber].subsurface((textureX, colStart, 1, colHeight))
-                    column2 = column2.copy()
+                    column = textureMap[textureNumber].subsurface((textureX, colStart, 1, colHeight))
+                    column = column.copy()
                     if side == 1:
                         c = (int(c) >> 1) & 8355711
-                    column2.fill((c, c, c), special_flags = pygame.BLEND_MULT)
-                    column2 = pygame.transform.scale(column2, (2, yHeight))
-                    screen.blit(column2, (column, yStart))
+                    column.fill((c, c, c), special_flags = pygame.BLEND_MULT)
+                    column = pygame.transform.scale(column, (2, yHeight))
+                    screen.blit(column, (x, yStart))
 
             # Player controls
             if pygame.key.get_pressed()[pygame.K_LEFT]:
