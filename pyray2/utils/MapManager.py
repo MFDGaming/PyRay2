@@ -36,7 +36,7 @@ class MapManager:
         return MapManager.getMaps()[num]['INFO']['NAME']
 
     def getNextMap(num):
-        return MapManager.getMaps()[num]['INFO']['NEXT']
+        return int(MapManager.getMaps()[num]['INFO']['NEXT']) - 1
 
     def isSecretMap(num):
         secret = MapManager.getMaps()[num]['INFO']['SECRET'].lower()
