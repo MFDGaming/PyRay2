@@ -101,7 +101,6 @@ class PyRay2(Thread):
 
             x = 0
             while x < screenWidth:
-                x += 1
                 # Calculate ray position and direction
                 cx = 2.0 * x / screenWidth - 1.0
                 rpx = px
@@ -230,6 +229,7 @@ class PyRay2(Thread):
                     column.fill((c, c, c), special_flags = pygame.BLEND_MULT)
                     column = pygame.transform.scale(column, (2, yHeight))
                     screen.blit(column, (x, yStart))
+                x += 1
 
             # Player controls
             if pygame.key.get_pressed()[pygame.K_LEFT]:
