@@ -205,14 +205,6 @@ class PyRay2(Thread):
                         textureX = textureWidth - textureX - 1
                     if side == 1 and rdy < 0:
                         textureX = textureWidth - textureX - 1
-                
-                    # How much increase the texture coordinmate per screen pixel
-                    step = 1.0 * textureHeight / lineHeight
-                    # Starting texture coordinate
-                    texturePos = (drawStart - screenHeight / 2 + lineHeight / 2) * step
-                
-                    textureY = int(texturePos) & (textureHeight - 1)
-                    texturePos += step
             
                     c = max(1, (255.0 - prepWallDist * 27.2) * (1 - side * .25))
                     yStart = max(0, drawStart)
