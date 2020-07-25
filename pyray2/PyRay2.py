@@ -170,11 +170,9 @@ class PyRay2(Thread):
         
                 # Calculate lowest and highest pixel to fill in currentstripe
                 drawStart = -lineHeight / 2.0 + screenHeight / 2.0
-                #if drawStart < 0:
-                    #drawStart = 0
                 drawEnd = lineHeight / 2.0 + screenHeight / 2.0
-                #if drawEnd >= screenHeight:
-                    #drawEnd = screenHeight - 1
+                if drawEnd >= screenHeight:
+                    drawEnd = screenHeight - 1
             
                 if textureMode == False:
                     # Wall colors 0 to 3
@@ -211,10 +209,10 @@ class PyRay2(Thread):
                     yStart = max(0, drawStart)
                     yStop = min(screenHeight, drawEnd)
                     pixelsPerTexel = lineHeight / textureHeight
-                    colStart = int((yStart - drawStart) / pixelsPerTexel + .5)
-                    colHeight = int((yStop - yStart) / pixelsPerTexel + .5)
-                    yStart = int(colStart * pixelsPerTexel + drawStart + .5)
-                    yHeight = int(colHeight * pixelsPerTexel + .5)
+                    colStart = int((yStart - drawStart) / pixelsPerTexel + .0000001)
+                    colHeight = int((yStop - yStart) / pixelsPerTexel + .0000001)
+                    yStart = int(colStart * pixelsPerTexel + drawStart + .0000001)
+                    yHeight = int(colHeight * pixelsPerTexel + .0000001)
                     column = textureMap[textureNumber].subsurface((textureX, colStart, 1, colHeight))
                     column = column.copy()
                     if side == 1:
