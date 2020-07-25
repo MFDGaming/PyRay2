@@ -161,12 +161,12 @@ class PyRay2(Thread):
                 
                 # Calculate distance projected on Camera direction (Euclidean distance will give fishey effect!)
                 if side == 0:
-                    prepWallDist = abs((mapX - rpx + (1.0 - stepX) / 2.0) / rdx)
+                    prepWallDist = (mapX - rpx + (1.0 - stepX) / 2.0) / rdx
                 else:
-                    prepWallDist = abs((mapY - rpy + (1.0 - stepY) / 2.0) / rdy)
+                    prepWallDist = (mapY - rpy + (1.0 - stepY) / 2.0) / rdy
             
                 # Calculate height of the line to draw on the screen
-                lineHeight = abs(int(screenHeight / (prepWallDist + .0000001)))
+                lineHeight = int(screenHeight / (prepWallDist + .0000001))
         
                 # Calculate lowest and highest pixel to fill in currentstripe
                 drawStart = -lineHeight / 2.0 + screenHeight / 2.0
@@ -187,7 +187,7 @@ class PyRay2(Thread):
                             color[i] = int(v / 1.2)                    
 
                     # Drawing the graphics                        
-                    pygame.draw.line(screen, color, (int(x), int(drawStart)), (int(x), int(drawEnd)), 2)
+                    pygame.draw.line(screen, color, (int(x), int(drawStart)), (int(x), int(drawEnd)), resolution)
                 else:
                     textureNumber = worldMap[mapX][mapY]
                     textureWidth = TextureManager.getTextureWidth(textureMap, textureNumber)
@@ -198,7 +198,7 @@ class PyRay2(Thread):
                         wallX = py + prepWallDist * rdy
                     else:
                         wallX = px + prepWallDist * rdx
-                    wallX -= math.floor((wallX))
+                    wallX -= math.floor(wallX)
             
                     # X coordinate on the texture
                     textureX = int(wallX * float(textureWidth))
