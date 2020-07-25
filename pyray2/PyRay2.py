@@ -106,7 +106,7 @@ class PyRay2(Thread):
                 cx = 2.0 * x / screenWidth - 1.0
                 rpx = px
                 rpy = py
-                rdx = pdx + cpx * cx
+                rdx = pdx + cpx * cx + .000000000000001 # avoiding ZDE
                 rdy = pdy + cpy * cx + .000000000000001 # avoiding ZDE
         
                 # Which box of the map the player is in
@@ -118,8 +118,8 @@ class PyRay2(Thread):
                 sideDistY = None
         
                 # Length of the ray from 1 x or y-side to next x or y-side
-                deltaDistX = abs(1.0 / rdx)
-                deltaDistY = abs(1.0 / rdy)
+                deltaDistX = math.sqrt(1.0 + rdy ** 2.0 / rdx ** 2.0)
+                deltaDistY = math.sqrt(1.0 + rdx ** 2.0 / rdy ** 2.0)
                 perpWallDist = None
         
                 # What direction to step in x or y-direction (either +1 or -1)
