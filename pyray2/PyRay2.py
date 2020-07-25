@@ -169,11 +169,11 @@ class PyRay2(Thread):
         
                 # Calculate lowest and highest pixel to fill in currentstripe
                 drawStart = -lineHeight / 2.0 + screenHeight / 2.0
-                if drawStart < 0:
-                    drawStart = 0
+                #if drawStart < 0:
+                    #drawStart = 0
                 drawEnd = lineHeight / 2.0 + screenHeight / 2.0
-                if drawEnd >= screenHeight:
-                    drawEnd = screenHeight - 1
+                #if drawEnd >= screenHeight:
+                    #drawEnd = screenHeight - 1
             
                 if textureMode == False:
                     # Wall colors 0 to 3
