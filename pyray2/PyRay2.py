@@ -57,6 +57,7 @@ class PyRay2(Thread):
             screen = pygame.display.set_mode((screenWidth, screenHeight))
             isFullScreen: bool = True
         pygame.display.set_caption(gameName + gameVersion)
+        resolution = 1
 
         # Texture Variables
         textureMap = TextureManager.getTextures()
@@ -100,7 +101,7 @@ class PyRay2(Thread):
                 pygame.draw.rect(screen, (50,50,50), (0, int(screenHeight/2), screenWidth, int(screenHeight/2)))
 
             x = 0
-            while x < screenWidth:
+            for x in range(0, screenWidth, resolution):
                 # Calculate ray position and direction
                 cx = 2.0 * x / screenWidth - 1.0
                 rpx = px
@@ -219,7 +220,7 @@ class PyRay2(Thread):
                     if side == 1:
                         c = (int(c) >> 1) & 8355711
                     column.fill((c, c, c), special_flags = pygame.BLEND_MULT)
-                    column = pygame.transform.scale(column, (2, yHeight))
+                    column = pygame.transform.scale(column, (resolution, yHeight))
                     screen.blit(column, (x, yStart))
                 x += 1
 
