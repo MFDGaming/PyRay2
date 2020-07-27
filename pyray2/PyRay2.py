@@ -90,16 +90,7 @@ class PyRay2(Thread):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-
-            if textureMode == False:
-                # Draws roof and floor
-                screen.fill((25,25,25))
-                pygame.draw.rect(screen, (50,50,50), (0, int(screenHeight/2), screenWidth, int(screenHeight/2)))
-            else:
-                # Draws roof and floor
-                screen.blit(pygame.transform.scale(textureMap[2], (screenWidth, screenHeight)), (0, 0))
-                pygame.draw.rect(screen, (50,50,50), (0, int(screenHeight/2), screenWidth, int(screenHeight/2)))
-
+                    
             x = 0
             for x in range(0, screenWidth, resolution):
                 # Calculate ray position and direction
@@ -218,6 +209,8 @@ class PyRay2(Thread):
                     column.fill((c, c, c), special_flags = pygame.BLEND_MULT)
                     column = pygame.transform.scale(column, (resolution, yHeight))
                     screen.blit(column, (x, yStart))
+                pygame.draw.line(screen, (50, 50, 50), (x, screenHeight), (x, drawEnd))
+                pygame.draw.line(screen, (50, 50, 50), (x, 0), (x, screenHeight - drawEnd))
                 x += 1
 
             # Player controls
