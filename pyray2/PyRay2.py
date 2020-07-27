@@ -166,7 +166,7 @@ class PyRay2(Thread):
                     prepWallDist = (mapY - rpy + (1.0 - stepY) / 2.0) / rdy
             
                 # Calculate height of the line to draw on the screen
-                lineHeight = int(screenHeight / (prepWallDist + .0000001))
+                lineHeight = int(screenHeight / (prepWallDist + .0000001)) * 1.45
         
                 # Calculate lowest and highest pixel to fill in currentstripe
                 drawStart = -lineHeight / 2.0 + screenHeight / 2.0
