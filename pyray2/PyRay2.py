@@ -210,7 +210,7 @@ class PyRay2(Thread):
                     column = pygame.transform.scale(column, (resolution, yHeight))
                     screen.blit(column, (x, yStart))
                 pygame.draw.line(screen, (50, 50, 50), (x, screenHeight), (x, drawEnd))
-                pygame.draw.line(screen, (50, 50, 50), (x, 0), (x, screenHeight - drawEnd))
+                pygame.draw.line(screen, (50, 50, 50), (x, 0), (x, screenHeight - int(drawEnd)))
                 x += 1
 
             # Player controls
