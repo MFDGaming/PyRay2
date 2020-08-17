@@ -97,8 +97,8 @@ class PyRay2(Thread):
                 cx = 2.0 * x / screenWidth - 1.0
                 rpx = px
                 rpy = py
-                rdx = pdx + cpx * cx + .000000000000001 # avoiding ZDE
-                rdy = pdy + cpy * cx + .000000000000001 # avoiding ZDE
+                rdx = pdx + cpx * cx
+                rdy = pdy + cpy * cx
         
                 # Which box of the map the player is in
                 mapX = int(rpx)
@@ -109,8 +109,8 @@ class PyRay2(Thread):
                 sideDistY = None
         
                 # Length of the ray from 1 x or y-side to next x or y-side
-                deltaDistX = math.sqrt(1.0 + rdy ** 2.0 / rdx ** 2.0)
-                deltaDistY = math.sqrt(1.0 + rdx ** 2.0 / rdy ** 2.0)
+                deltaDistX = 0 if rdy == 0 else (1 if rdx == 0 else abs(1 / rdx))
+                deltaDistY = 0 if rdx == 0 else (1 if rdy == 0 else abs(1 / rdy))
                 perpWallDist = None
         
                 # What direction to step in x or y-direction (either +1 or -1)
@@ -157,7 +157,7 @@ class PyRay2(Thread):
                     prepWallDist = (mapY - rpy + (1.0 - stepY) / 2.0) / rdy
             
                 # Calculate height of the line to draw on the screen
-                lineHeight = int(screenHeight / (prepWallDist + .0000001)) * 1.45
+                lineHeight = int(screenHeight / prepWallDist) * 1.45
         
                 # Calculate lowest and highest pixel to fill in currentstripe
                 drawStart = -lineHeight / 2.0 + screenHeight / 2.0
@@ -198,10 +198,10 @@ class PyRay2(Thread):
                     yStart = max(0, drawStart)
                     yStop = min(screenHeight, drawEnd)
                     pixelsPerTexel = lineHeight / textureHeight
-                    colStart = int((yStart - drawStart) / pixelsPerTexel + .0000001)
-                    colHeight = int((yStop - yStart) / pixelsPerTexel + .0000001)
-                    yStart = int(colStart * pixelsPerTexel + drawStart + .0000001)
-                    yHeight = int(colHeight * pixelsPerTexel + .0000001)
+                    colStart = int((yStart - drawStart) / pixelsPerTexel)
+                    colHeight = int((yStop - yStart) / pixelsPerTexel)
+                    yStart = int(colStart * pixelsPerTexel + drawStart)
+                    yHeight = int(colHeight * pixelsPerTexel)
                     column = textureMap[textureNumber].subsurface((textureX, colStart, 1, colHeight))
                     column = column.copy()
                     if side == 1:
