@@ -13,11 +13,12 @@
 """
 
 from .FS import FS
+from io import BytesIO
 import pygame
 
 class TextureManager:
     def loadTexture(texture):
-        return pygame.image.load(FS.getPK3Package("game").open(texture)).convert()
+        return pygame.image.load(BytesIO(FS.getPK3Package("game").read(texture))).convert()
 
     def getTextures():
         texture = [()]
