@@ -197,20 +197,25 @@ class PyRay2(Thread):
                     c = max(1, (255.0 - prepWallDist * 27.2) * (1 - side * .25))
                     yStart = max(0, drawStart)
                     yStop = min(screenHeight, drawEnd)
+                    yHeight = int(yStop - yStart)
                     pixelsPerTexel = lineHeight / textureHeight
-                    colStart = int((yStart - drawStart) / pixelsPerTexel)
-                    colHeight = int((yStop - yStart) / pixelsPerTexel)
-                    yStart = int(colStart * pixelsPerTexel + drawStart)
-                    yHeight = int(colHeight * pixelsPerTexel)
+                    if (yStart - drawStart) == 0 or pixelsPerTexel == 0:
+                        colStart = 0
+                    else:
+                        colStart = int((yStart - drawStart) / pixelsPerTexel)
+                    if (yStop - yStart) == 0 or pixelsPerTexel == 0:
+                        colHeight = 0
+                    else:
+                        colHeight = int((yStop - yStart) / pixelsPerTexel) 
                     column = textureMap[textureNumber].subsurface((textureX, colStart, 1, colHeight))
                     column = column.copy()
                     if side == 1:
                         c = (int(c) >> 1) & 8355711
                     column.fill((c, c, c), special_flags = pygame.BLEND_MULT)
                     column = pygame.transform.scale(column, (resolution, yHeight))
-                    screen.blit(column, (x, yStart))
-                pygame.draw.line(screen, (50, 50, 50), (x, screenHeight), (x, drawEnd))
-                pygame.draw.line(screen, (50, 50, 50), (x, 0), (x, screenHeight - int(drawEnd)))
+                    screen.blit(column, (x, int(yStart)))
+                pygame.draw.line(screen, (50, 50, 50), (x, int(screenHeight)), (x, int(drawEnd)))
+                pygame.draw.line(screen, (50, 50, 50), (x, 0), (x, int(screenHeight) - int(drawEnd)))
                 x += 1
 
             # Player controls
