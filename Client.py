@@ -114,7 +114,8 @@ def loginToServer():
             elif id == ids["Spawn"]:
                 readSpawn(data)
                 posX = spawn["x"]
-                posY = spawn["y"]    
+                posY = spawn["y"]
+                break
 
 def handleMove():
     recv = receivePacket()
