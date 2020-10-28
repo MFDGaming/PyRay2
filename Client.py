@@ -106,6 +106,7 @@ def loginToServer():
         if recv != None:
             data, address = recv
             id = data[0]
+            print("Client: " + str(id))
             if id == ids["LoginResponse"]:
                 readLoginResponse(data)
                 if loginResponse["auth"] == 0:
