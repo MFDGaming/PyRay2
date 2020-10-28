@@ -121,13 +121,13 @@ def handler(data, address):
         readLogin(data)
         if login["protocol"] != protocol:
             loginResponse["auth"] = 0
-            sendPacket(writeLoginResponse())
+            sendPacket(writeLoginResponse(), address)
             return
         loginResponse["auth"] = 1
         spawn["x"] = startPosX
         spawn["y"] = startPosY
-        sendPacket(writeLoginResponse())
-        sendPacket(writeSpawn())
+        sendPacket(writeLoginResponse(), address)
+        sendPacket(writeSpawn(), address)
         addClient(address)
         getClient(address)["username"] = login["username"]
     elif isClient(address):
@@ -136,6 +136,11 @@ def handler(data, address):
             readMove(data)
             client["x"] = move["x"]
             client["y"] = move["y"]
+            
+def movePlayer(address, x, y):
+    move["x"] = x
+    move["y"] = y
+    sendPacket(writeMove(), address)
 
 def run():
     sock.bind(serverAddress)
