@@ -117,6 +117,7 @@ def writeMove():
 
 def handler(data, address):
     id = data[0]
+    print("Server: " + str(id))
     if id == ids["Login"]:
         readLogin(data)
         if login["protocol"] != protocol:
